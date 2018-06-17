@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
+    <title>F2E</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            /*border: 1px solid black;*/
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        body {
+            margin: 0;
+            /* background: linear-gradient(120deg, #003b64 50%, #536976 50%, #fff200); */
+            position: relative;
+            z-index: 5;
+        }
+
+        .product-page {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 10;
+            background-color: rgba(25, 25, 25, .5)
+        }
+
+        .close {
+            font-size: 30px;
+            color: tomato;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .showInformation {
+            max-width: 768px;
+            width: 100%;
+            margin: 0 auto;
+            height: 320px;
+            margin-top: 10%;
+        }
+
+        .lineMask {
+            background-color: #FFF;
+            position: relative;
+            border-radius: 10px;
+            padding-top: 9px;
+            border-left: 10px solid #ff6908;
+        }
+
+        .lineMask:after {
+            position: absolute;
+            height: 100%;
+            width: 2px;
+            content: "";
+            background: #e5e5d1;
+            left: 170px;
+            top: 0;
+            z-index: 19;
+        }
+
+        .lineMask:before {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #6fc173;
+            border-radius: 100%;
+            left: 166px;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            z-index: 20;
+        }
+
+        .date-title,
+        .line-text {
+            display: inline-block;
+            height: 150px;
+        }
+
+        .date-title {
+            width: 22%;
+            vertical-align: top;
+            font-size: 20px;
+            margin: 0;
+            padding-top: 55px;
+            padding-left: 40px;
+        }
+
+        .line-text {
+            width: 77%;
+        }
+
+        th,
+        td {
+            padding: 6px 0px 6px 9px;
+        }
+
+        td>span {
+            padding: 8px;
+            border-radius: 5px;
+            background-color: #2e9df7;
+            margin-right: 5px;
+        }
+
+        td>span:hover {
+            background-color: #ffc907;
+        }
+
+        .banner {
+            position: relative;
+        }
+
+        .upper,
+        .below {
+            height: 50%;
+        }
+
+        .upper {
+            background-color: #003b64;
+        }
+
+        .below {
+            background-color: #fff200;
+        }
+
+        form>h1 {
+            color: #00bce4;
+        }
+
+        .card {
+            position: absolute;
+            width: calc(100%*4/12);
+            background-color: #fefefe;
+            top: calc(100% - 451px);
+            left: calc(100%*4/12);
+            border-radius: 5px;
+            padding-left: 20px;
+            padding-right: 20px;
+            overflow-y: scroll;
+            height: 306px;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        .dashed {
+            border-top: 2px dashed #000;
+        }
+
+        input[required]::-webkit-input-placeholder {
+            color: tomato;
+        }
+
+        ul {
+            padding-top: 10px;
+            padding-left: 0;
+        }
+
+        ul>li {
+            padding: 5px;
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="product-page hidden">
+        <i id="close" class="fas fa-times-circle close"></i>
+        <div id="showInformation" class="showInformation">
+
+        </div>
+    </div>
+    <div class="banner">
+        <div class="upper"></div>
+        <div class="below"></div>
+        <div class="card">
+            <form>
+                <h1>精神時光屋大門已開</h1>
+                <div id="countDown">
+                    <h2></h2>
+                </div>
+                <h2>目前報名總人數 :
+                    <span class="total"></span>
+                </h2>
+                <label for="emal">報名時E-mail帳號</label>
+                <br>
+                <p></p>
+                <input id="email" name="email" type="email" placeholder="請輸入報名Email...">
+                <input id="send" type="button" value="查詢報名資格">
+            </form>
+            <ul id="result"></ul>
+            <div id="stageCheck"></div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector(".banner").style.height = window.innerHeight + "px";
+        window.onresize = function () {
+            document.querySelector(".banner").style.height = window.innerHeight + "px";
+        };
+
+        var xhr = new XMLHttpRequest();
+        var totalURL = "https://www.thef2e.com/api/signUpTotal"
+        xhr.open("get", totalURL, true);
+        xhr.send();
+        xhr.addEventListener("load", function () {
+            if (xhr.status == 200) {
+                var callbackData = JSON.parse(xhr.responseText);
+                document.querySelector(".total").textContent = callbackData.total + "人";
+            } else {
+                console.log("資料錯誤");
+            }
+        });
+
+        const xhr2 = new XMLHttpRequest();
+        const url = "https://www.thef2e.com/api/isSignUp";
+        const email = document.querySelector("#email");
+        const send = document.querySelector("#send");
+        const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+
+        var xhr3 = new XMLHttpRequest();
+        var checkURL = "https://www.thef2e.com/api/stageCheck";
+
+        send.addEventListener("click", function () {
+            // 使用者未輸入 e-mail
+            if (email.value === "") {
+                email.value = "";
+                email.setAttribute("required", "true");
+                return;
+            }
+
+            // 檢查 e-mail 正規表示式
+            if (email.value.search(emailRule) != -1) {
+                email.removeAttribute("required");
+            } else {
+                email.value = "";
+                email.setAttribute("required", "true");
+                email.placeholder = '請檢查 e-mail 格式!'
+                return;
+            }
+
+            xhr2.open("post", url, true);
+            xhr2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr2.send(`email=${email.value}`);
+            var result = document.querySelector("#result");
+            result.classList.add("dashed");
+            result.innerHTML =
+                `<li>姓　　名 ｜ 查詢中...</li>
+                <li>報名時間 ｜ 查詢中...</li>
+                <li>報名組別 ｜ 查詢中...</li>`;
+            xhr2.addEventListener("load", function () {
+                if (xhr.status == 200) {
+                    var callbackData = JSON.parse(xhr2.responseText);
+                    console.log(callbackData);
+                    var timeObject = new Date(callbackData.timeStamp);
+                    var y = timeObject.getFullYear();
+                    var m = timeObject.getMonth();
+                    var mon = m + 1;
+                    var d = timeObject.getDate();
+
+                    if (callbackData.success == true) {
+                        result.innerHTML =
+                            `<li>姓　　名 ｜ ${callbackData.nickName}</li>
+                            <li>報名時間 ｜ ${y}.${mon < 10 ? "0" + mon : mon}.${d}</li>
+                            <li>報名組別 ｜ ${callbackData.skill}</li>`;
+                    } else {
+                        result.innerHTML = `<p>報名結果 : ${callbackData.message}</p>`
+                    }
+                } else {
+                    console.log("資料錯誤");
+                }
+            });
+
+            var events = [{
+                title: "第一階段",
+                period: "06/04(一)~06/11(一)"
+            }];
+
+            xhr3.open("post", checkURL, true);
+            xhr3.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr3.send(`email=${email.value}`);
+            var stageCk = document.querySelector("#stageCheck");
+            xhr3.addEventListener("load", function () {
+                if (xhr.status == 200) {
+                    stageCk.innerHTML = `<input type="button" id="record" value="參賽紀錄">`;
+                    var callbackRecord = JSON.parse(xhr3.responseText);
+                    var record = document.querySelector("#record");
+                    var close = document.querySelector("#close");
+
+                    record.addEventListener("click", function () {
+                        document.querySelector(".product-page").classList.remove("hidden");
+                    });
+                    close.addEventListener("click", function () {
+                        document.querySelector(".product-page").classList.add("hidden");
+                    });
+
+                    var showInformation = document.querySelector("#showInformation");
+                    var str = "";
+                    for (var i = 0; i < callbackRecord.length; i++) {
+                        var stage = callbackRecord[i].stage - 1;
+                        var joinTime = new Date(callbackRecord[i].timeStamp);
+                        var y = joinTime.getFullYear();
+                        var m = joinTime.getMonth();
+                        var mon = m + 1;
+                        var d = joinTime.getDate();
+                        var h = joinTime.getHours() - 8;
+                        var min = joinTime.getMinutes();
+                        var s = joinTime.getSeconds();
+
+                        var skillTags = [callbackRecord[i].tag.split(",")];
+                        //console.log(skillTags[0][0]);
+                        var tags = "";
+                        for (var j = 0; j < skillTags[0].length; j++) {
+                            tags += `<span>${skillTags[0][j]}</span>`
+                        }
+                        //console.log(tags);
+                        str +=
+                            `<div class="lineMask">
+                                <h4 class="date-title">
+                                    ${events[stage].title}</br>
+                                    ${y}-${mon < 10 ? "0" + mon : mon}-${d}
+                                </h4>
+                                <table class="line-text">
+                                    <tr>
+                                        <th>挑戰周次 : </th>
+                                        <td>${events[stage].period}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>挑戰領域 : </th>
+                                        <td>${tags}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>作品網址 : </th>
+                                        <td><a target="_blank" href="${callbackRecord[i].url}">${callbackRecord[i].url}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <th>投稿時間 : </th>
+                                        <td>${y}-${mon < 10 ? "0" + mon : mon}-${d < 10 ? "0" + d : d} 
+                                        ${h < 10 ? "0" + h : h}:${min < 10 ? "0" + min : min}:${s < 10 ? "0" + s : s}</td>
+                                    </tr>
+                                </table>
+                            </div>`;
+                        showInformation.innerHTML = str;
+                    };
+                } else {
+                    console.log("資料錯誤");
+                }
+            });
+        });
+        /*===========================倒數計時===================================*/
+        var timeCode = ["2018/06/11 12:00:00", "2018/06/18 12:00:00"];
+
+        function countDown() {
+            var endtime = new Date("2018/06/18 12:00:00");
+            var count = endtime.getTime() - new Date().getTime();
+            //console.log(Date(count));
+            days = Math.floor(count / (24 * 60 * 60 * 1000));
+            var hs = count % (24 * 3600 * 1000);
+            var hours = Math.floor(hs / (3600 * 1000));
+            var ms = hs % (3600 * 1000);
+            var minutes = Math.floor(ms / (60 * 1000));
+            var ss = ms % (60 * 1000);
+            var seconds = Math.round(ss / 1000);
+            // round 4捨5入 floor 無條件捨去
+            var h = hours;
+            var m = minutes;
+            var s = seconds;
+            if (s === 60) {
+                s === 00
+            };
+            document.querySelector("#countDown>h2").innerHTML =
+                `第二階段截止還有 : ${days}天${h<10?"0"+h:h}小時${m<10?"0"+m:m}分${s<10?"0"+s:s}秒`;
+            if (s < 0) {
+                document.querySelector("#countDown>h2").innerHTML = `第二階段已截止`;
+                return;
+            }
+            setTimeout(countDown, 1000);
+            //console.log(Date(s));
+        };
+        countDown();
+    </script>
+</body>
+
+</html>
