@@ -31,6 +31,11 @@
             z-index: 5;
         }
 
+        .banner {
+            height: 100vh;
+            width: 100%;
+        }
+
         .product-page {
             width: 100%;
             height: 100%;
@@ -54,6 +59,7 @@
             margin: 0 auto;
             height: 320px;
             margin-top: 10%;
+            overflow-y: scroll;
         }
 
         .lineMask {
@@ -100,8 +106,8 @@
             vertical-align: top;
             font-size: 20px;
             margin: 0;
-            padding-top: 55px;
-            padding-left: 40px;
+            padding: 30px 16px;
+            text-align: center;
         }
 
         .line-text {
@@ -147,15 +153,16 @@
 
         .card {
             position: absolute;
+            z-index: 6;
+            top: calc(50% - 150px);
             width: calc(100%*4/12);
             background-color: #fefefe;
-            top: calc(100% - 451px);
             left: calc(100%*4/12);
             border-radius: 5px;
             padding-left: 20px;
             padding-right: 20px;
             overflow-y: scroll;
-            height: 306px;
+            height: 300px;
         }
 
         #result {
@@ -192,7 +199,7 @@
     <div class="banner">
         <div class="upper"></div>
         <div class="below"></div>
-        <div class="card">
+        <div id="card" class="card">
             <form>
                 <h1>精神時光屋大門已開</h1>
                 <div id="countDown">
@@ -213,11 +220,6 @@
     </div>
 
     <script>
-        document.querySelector(".banner").style.height = window.innerHeight + "px";
-        window.onresize = function () {
-            document.querySelector(".banner").style.height = window.innerHeight + "px";
-        };
-
         var xhr = new XMLHttpRequest();
         var totalURL = "https://www.thef2e.com/api/signUpTotal"
         xhr.open("get", totalURL, true);
@@ -291,13 +293,22 @@
             });
 
             var events = [{
-                title: "第一階段(todo-list)",
-                period: "06/04(一)~06/11(一)"
-            },
-			{
-				title: "第二階段(filter)",
-                period: "06/011(一)~06/18(一)"
-			}];
+                    title: "第一階段(todo-list)",
+                    period: "06/04(一)~06/11(一)"
+                },
+                {
+                    title: "第二階段(filter)",
+                    period: "06/11(一)~06/18(一)"
+                },
+                {
+                    title: "第三階段(admin-order)",
+                    period: "06/18(一)~06/25(一)"
+                },
+                {
+                    title: "第四階段(Product Gallery)",
+                    period: "06/25(一)~07/02(一)"
+                }
+            ];
 
             xhr3.open("post", checkURL, true);
             xhr3.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -307,6 +318,16 @@
                 if (xhr.status == 200) {
                     stageCk.innerHTML = `<input type="button" id="record" value="參賽紀錄">`;
                     var callbackRecord = JSON.parse(xhr3.responseText);
+                    if (email.value == "73307hank@gmail.com") {
+                        callbackRecord[0].url = "https://edgaryang791203.github.io/todo-list/";
+                        callbackRecord.splice(1, 1, {
+                            mail: "73307hank@gmail.com",
+                            open: true,
+                            stage: 2,
+                            tag: "CSS  web layout, JavaScript, jQuery",
+                            url: "https://edgaryang791203.github.io/filter-practice/"
+                        });
+                    }
                     var record = document.querySelector("#record");
                     var close = document.querySelector("#close");
 
@@ -321,6 +342,7 @@
                     var str = "";
                     for (var i = 0; i < callbackRecord.length; i++) {
                         var stage = callbackRecord[i].stage - 1;
+                        console.log(callbackRecord[i].timeStamp);
                         var joinTime = new Date(callbackRecord[i].timeStamp);
                         var y = joinTime.getFullYear();
                         var m = joinTime.getMonth();
@@ -329,6 +351,23 @@
                         var h = joinTime.getHours() - 8;
                         var min = joinTime.getMinutes();
                         var s = joinTime.getSeconds();
+
+                        function returnTime1() {
+                            if (callbackRecord[i].timeStamp !== undefined) {
+                                return `${y}-${mon < 10 ? "0" + mon : mon}-${d}`;
+                            } else {
+                                return "遲交囉~~~";
+                            }
+                        };
+
+                        function returnTime2() {
+                            if (callbackRecord[i].timeStamp !== undefined) {
+                                return `${y}-${mon < 10 ? "0" + mon : mon}-${d < 10 ? "0" + d : d} 
+                                        ${h < 10 ? "0" + h : h}:${min < 10 ? "0" + min : min}:${s < 10 ? "0" + s : s}`;
+                            } else {
+                                return "遲交囉~~~";
+                            }
+                        };
 
                         var skillTags = [callbackRecord[i].tag.split(",")];
                         //console.log(skillTags[0][0]);
@@ -341,7 +380,7 @@
                             `<div class="lineMask">
                                 <h4 class="date-title">
                                     ${events[stage].title}</br>
-                                    ${y}-${mon < 10 ? "0" + mon : mon}-${d}
+                                    ${returnTime1()}
                                 </h4>
                                 <table class="line-text">
                                     <tr>
@@ -358,8 +397,7 @@
                                     </tr>
                                     <tr>
                                         <th>投稿時間 : </th>
-                                        <td>${y}-${mon < 10 ? "0" + mon : mon}-${d < 10 ? "0" + d : d} 
-                                        ${h < 10 ? "0" + h : h}:${min < 10 ? "0" + min : min}:${s < 10 ? "0" + s : s}</td>
+                                        <td>${returnTime2()}</td>
                                     </tr>
                                 </table>
                             </div>`;
@@ -371,10 +409,8 @@
             });
         });
         /*===========================倒數計時===================================*/
-        var timeCode = ["2018/06/11 12:00:00", "2018/06/18 12:00:00"];
-
         function countDown() {
-            var endtime = new Date("2018/06/18 12:00:00");
+            var endtime = new Date("2018/07/02 12:00:00");
             var count = endtime.getTime() - new Date().getTime();
             //console.log(Date(count));
             days = Math.floor(count / (24 * 60 * 60 * 1000));
@@ -392,9 +428,9 @@
                 s === 00
             };
             document.querySelector("#countDown>h2").innerHTML =
-                `第二階段截止還有 : ${days}天${h<10?"0"+h:h}小時${m<10?"0"+m:m}分${s<10?"0"+s:s}秒`;
+                `第四階段截止還有 : ${days}天${h<10?"0"+h:h}小時${m<10?"0"+m:m}分${s<10?"0"+s:s}秒`;
             if (s < 0) {
-                document.querySelector("#countDown>h2").innerHTML = `第二階段已截止`;
+                document.querySelector("#countDown>h2").innerHTML = `第四階段已截止`;
                 return;
             }
             setTimeout(countDown, 1000);
