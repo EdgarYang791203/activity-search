@@ -410,7 +410,7 @@
         });
         /*===========================倒數計時===================================*/
         function countDown() {
-            var endtime = new Date("2018/07/09 12:00:00");
+            var endtime = new Date("2018/07/16 12:00:00");
             var count = endtime.getTime() - new Date().getTime();
             //console.log(Date(count));
             days = Math.floor(count / (24 * 60 * 60 * 1000));
@@ -428,9 +428,9 @@
                 s === 00
             };
             document.querySelector("#countDown>h2").innerHTML =
-                `第五階段截止還有 : ${days}天${h<10?"0"+h:h}小時${m<10?"0"+m:m}分${s<10?"0"+s:s}秒`;
+                `第六階段截止還有 : ${days}天${h<10?"0"+h:h}小時${m<10?"0"+m:m}分${s<10?"0"+s:s}秒`;
             if (s < 0) {
-                document.querySelector("#countDown>h2").innerHTML = `第五階段已截止`;
+                document.querySelector("#countDown>h2").innerHTML = `第六階段已截止`;
                 return;
             }
             setTimeout(countDown, 1000);
