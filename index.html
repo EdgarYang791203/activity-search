@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <title>F2E</title>
     <style>
         * {
@@ -15,27 +14,27 @@
             -webkit-box-sizing: border-box;
             /*border: 1px solid black;*/
         }
-
+        
         a {
             text-decoration: none;
         }
-
+        
         .hidden {
             display: none;
         }
-
+        
         body {
             margin: 0;
             /* background: linear-gradient(120deg, #003b64 50%, #536976 50%, #fff200); */
             position: relative;
             z-index: 5;
         }
-
+        
         .banner {
             height: 100vh;
             width: 100%;
         }
-
+        
         .product-page {
             width: 100%;
             height: 100%;
@@ -43,7 +42,7 @@
             z-index: 10;
             background-color: rgba(25, 25, 25, .5)
         }
-
+        
         .close {
             font-size: 30px;
             color: tomato;
@@ -52,7 +51,7 @@
             right: 20px;
             cursor: pointer;
         }
-
+        
         .showInformation {
             max-width: 768px;
             width: 100%;
@@ -61,7 +60,7 @@
             margin-top: 10%;
             overflow-y: scroll;
         }
-
+        
         .lineMask {
             background-color: #FFF;
             position: relative;
@@ -69,7 +68,7 @@
             padding-top: 9px;
             border-left: 10px solid #ff6908;
         }
-
+        
         .lineMask:after {
             position: absolute;
             height: 100%;
@@ -80,7 +79,7 @@
             top: 0;
             z-index: 19;
         }
-
+        
         .lineMask:before {
             content: "";
             position: absolute;
@@ -94,13 +93,13 @@
             margin: auto;
             z-index: 20;
         }
-
+        
         .date-title,
         .line-text {
             display: inline-block;
             height: 150px;
         }
-
+        
         .date-title {
             width: 22%;
             vertical-align: top;
@@ -109,48 +108,48 @@
             padding: 30px 16px;
             text-align: center;
         }
-
+        
         .line-text {
             width: 77%;
         }
-
+        
         th,
         td {
             padding: 6px 0px 6px 9px;
         }
-
+        
         td>span {
             padding: 8px;
             border-radius: 5px;
             background-color: #2e9df7;
             margin-right: 5px;
         }
-
+        
         td>span:hover {
             background-color: #ffc907;
         }
-
+        
         .banner {
             position: relative;
         }
-
+        
         .upper,
         .below {
             height: 50%;
         }
-
+        
         .upper {
             background-color: #003b64;
         }
-
+        
         .below {
             background-color: #fff200;
         }
-
+        
         form>h1 {
             color: #00bce4;
         }
-
+        
         .card {
             position: absolute;
             z-index: 6;
@@ -164,24 +163,24 @@
             overflow-y: scroll;
             height: 300px;
         }
-
+        
         #result {
             margin-top: 20px;
         }
-
+        
         .dashed {
             border-top: 2px dashed #000;
         }
-
+        
         input[required]::-webkit-input-placeholder {
             color: tomato;
         }
-
+        
         ul {
             padding-top: 10px;
             padding-left: 0;
         }
-
+        
         ul>li {
             padding: 5px;
             list-style: none;
@@ -224,7 +223,7 @@
         var totalURL = "https://www.thef2e.com/api/signUpTotal"
         xhr.open("get", totalURL, true);
         xhr.send();
-        xhr.addEventListener("load", function () {
+        xhr.addEventListener("load", function() {
             if (xhr.status == 200) {
                 var callbackData = JSON.parse(xhr.responseText);
                 document.querySelector(".total").textContent = callbackData.total + "人";
@@ -242,7 +241,7 @@
         var xhr3 = new XMLHttpRequest();
         var checkURL = "https://www.thef2e.com/api/stageCheck";
 
-        send.addEventListener("click", function () {
+        send.addEventListener("click", function() {
             // 使用者未輸入 e-mail
             if (email.value === "") {
                 email.value = "";
@@ -269,7 +268,7 @@
                 `<li>姓　　名 ｜ 查詢中...</li>
                 <li>報名時間 ｜ 查詢中...</li>
                 <li>報名組別 ｜ 查詢中...</li>`;
-            xhr2.addEventListener("load", function () {
+            xhr2.addEventListener("load", function() {
                 if (xhr.status == 200) {
                     var callbackData = JSON.parse(xhr2.responseText);
                     console.log(callbackData);
@@ -293,28 +292,30 @@
             });
 
             var events = [{
-                    title: "第一階段(todo-list)",
-                    period: "06/04(一)~06/11(一)"
-                },
-                {
-                    title: "第二階段(filter)",
-                    period: "06/11(一)~06/18(一)"
-                },
-                {
-                    title: "第三階段(admin-order)",
-                    period: "06/18(一)~06/25(一)"
-                },
-                {
-                    title: "第四階段(Product Gallery)",
-                    period: "06/25(一)~07/02(一)"
-                }
-            ];
+                title: "第一階段(todo-list)",
+                period: "06/04(一)~06/11(一)"
+            }, {
+                title: "第二階段(filter)",
+                period: "06/11(一)~06/18(一)"
+            }, {
+                title: "第三階段(admin-order)",
+                period: "06/18(一)~06/25(一)"
+            }, {
+                title: "第四階段(Product Gallery)",
+                period: "06/25(一)~07/02(一)"
+            }, {
+                title: "第五階段(Comic Viewer)",
+                period: "07/02(一)~07/09(一)"
+            }, {
+                title: "第六階段(Validation)",
+                period: "07/09(一)~07/16(一)"
+            }];
 
             xhr3.open("post", checkURL, true);
             xhr3.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr3.send(`email=${email.value}`);
             var stageCk = document.querySelector("#stageCheck");
-            xhr3.addEventListener("load", function () {
+            xhr3.addEventListener("load", function() {
                 if (xhr.status == 200) {
                     stageCk.innerHTML = `<input type="button" id="record" value="參賽紀錄">`;
                     var callbackRecord = JSON.parse(xhr3.responseText);
@@ -331,10 +332,10 @@
                     var record = document.querySelector("#record");
                     var close = document.querySelector("#close");
 
-                    record.addEventListener("click", function () {
+                    record.addEventListener("click", function() {
                         document.querySelector(".product-page").classList.remove("hidden");
                     });
-                    close.addEventListener("click", function () {
+                    close.addEventListener("click", function() {
                         document.querySelector(".product-page").classList.add("hidden");
                     });
 
@@ -410,7 +411,7 @@
         });
         /*===========================倒數計時===================================*/
         function countDown() {
-            var endtime = new Date("2018/07/16 12:00:00");
+            var endtime = new Date("2018/07/23 12:00:00");
             var count = endtime.getTime() - new Date().getTime();
             //console.log(Date(count));
             days = Math.floor(count / (24 * 60 * 60 * 1000));
@@ -428,9 +429,9 @@
                 s === 00
             };
             document.querySelector("#countDown>h2").innerHTML =
-                `第六階段截止還有 : ${days}天${h<10?"0"+h:h}小時${m<10?"0"+m:m}分${s<10?"0"+s:s}秒`;
+                `第七階段截止還有 : ${days}天${h<10?"0"+h:h}小時${m<10?"0"+m:m}分${s<10?"0"+s:s}秒`;
             if (s < 0) {
-                document.querySelector("#countDown>h2").innerHTML = `第六階段已截止`;
+                document.querySelector("#countDown>h2").innerHTML = `第七階段已截止`;
                 return;
             }
             setTimeout(countDown, 1000);
